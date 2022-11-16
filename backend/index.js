@@ -25,11 +25,7 @@ app.use(
 if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
-      origin: [
-        process.env.PRODUCTION_URL,
-        process.env.SOCKET_PRODUCTION_URL,
-        process.env.CNAME_URL,
-      ],
+      origin: [process.env.PRODUCTION_URL, process.env.SOCKET_PRODUCTION_URL],
       credentials: true,
     })
   );
