@@ -325,6 +325,8 @@ exports.connectSubmit = async (req, res) => {
         isSignUpComplete: user.isSignUpComplete,
       };
 
+      console.log(user.inviteCode);
+
       return res.status(200).send({ message: user.inviteCode, user });
     }
 
