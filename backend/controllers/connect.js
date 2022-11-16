@@ -297,20 +297,6 @@ exports.connectSubmit = async (req, res) => {
         .send({ error: "Form not submitted. Please try again." });
     }
 
-    if (user.inviteCode) {
-      user = {
-        discordId: user.discordId,
-        discordUsername: user.discordUsername,
-        twitterId: user.twitterId,
-        twitterUsername: user.twitterUsername,
-        walletAddress: user.walletAddress,
-        currentStep: user.currentStep,
-        isSignUpComplete: user.isSignUpComplete,
-      };
-
-      return res.status(200).send({ message: user.inviteCode, user });
-    }
-
     const { captcha } = sanitize(req.body);
 
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captcha}`;
@@ -326,6 +312,20 @@ exports.connectSubmit = async (req, res) => {
 
     if (!isValidCaptcha) {
       return res.status(400).send({ error: "Invalid captcha response." });
+    }
+
+    if (user.inviteCode) {
+      user = {
+        discordId: user.discordId,
+        discordUsername: user.discordUsername,
+        twitterId: user.twitterId,
+        twitterUsername: user.twitterUsername,
+        walletAddress: user.walletAddress,
+        currentStep: user.currentStep,
+        isSignUpComplete: user.isSignUpComplete,
+      };
+
+      return res.status(200).send({ message: user.inviteCode, user });
     }
 
     const guild = await discordClient.guilds.fetch(
