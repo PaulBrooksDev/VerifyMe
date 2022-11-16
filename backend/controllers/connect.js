@@ -168,6 +168,20 @@ exports.connectDiscord = async (req, res) => {
 // description - Sends the twitter oAuth redirect to the users browser
 exports.sendTwitterAuthUrl = async (req, res) => {
   try {
+    let user = await User.findOne({ uuid: sanitize(req.user.id) });
+
+    if (!user) {
+      return res
+        .status(404)
+        .send({ error: "Twitter not connected. Please try again." });
+    }
+
+    if (!user.discordId || !user.discordUsername) {
+      return res
+        .status(404)
+        .send({ error: "You must first confirm your discord account. " });
+    }
+
     oa.getOAuthRequestToken((e, requestToken) => {
       if (e) return res.status(400).send({ error: e.message });
 
@@ -195,7 +209,19 @@ exports.connectTwitter = async (req, res) => {
         .send({ error: "Twitter not connected. Please try again." });
     }
 
+    if (!user.discordId || !user.discordUsername || user.currentStep !== 1) {
+      return res
+        .status(404)
+        .send({ error: "You must first confirm your discord account. " });
+    }
+
     const { oauthToken, verifier } = sanitize(req.body.data);
+
+    if (!oauthToken || !verifier) {
+      return res
+        .status(400)
+        .send({ error: "Invalid login attempt. Please try again." });
+    }
 
     oa.getOAuthAccessToken(
       oauthToken,
@@ -260,7 +286,19 @@ exports.connectWallet = async (req, res) => {
         .send({ error: "Wallet not connected. Please try again." });
     }
 
+    if (!user.twitterId || !user.twitterUsername || user.currentStep !== 2) {
+      return res.status(404).send({
+        error: "You must first confirm your twitter and discord account. ",
+      });
+    }
+
     const { address } = sanitize(req.body);
+
+    if (!address) {
+      return res
+        .status(404)
+        .send({ error: "No address provided. Please try again." });
+    }
 
     user.walletAddress = address;
     user.currentStep = 3;
@@ -295,6 +333,13 @@ exports.connectSubmit = async (req, res) => {
       return res
         .status(404)
         .send({ error: "Form not submitted. Please try again." });
+    }
+
+    if (!user.walletAddress || user.currentStep !== 3) {
+      return res.status(404).send({
+        error:
+          "You must first confirm your twitter, discord, and ETH accounts. ",
+      });
     }
 
     const { captcha } = sanitize(req.body);
