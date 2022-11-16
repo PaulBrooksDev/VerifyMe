@@ -81,7 +81,7 @@ exports.connectDiscord = async (req, res) => {
     // Query string sent from discord redirect
     const code = sanitize(req.body.code);
 
-    console.log(code);
+    console.log(code, process.env.DISCORD_REDIRECT_URI);
 
     // Verify token sent from browser
     const isAuth = await discordOauth.tokenRequest({
