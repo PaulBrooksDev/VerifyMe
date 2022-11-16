@@ -323,9 +323,8 @@ exports.connectSubmit = async (req, res) => {
         walletAddress: user.walletAddress,
         currentStep: user.currentStep,
         isSignUpComplete: user.isSignUpComplete,
+        inviteCode: user.inviteCode,
       };
-
-      console.log(user.inviteCode);
 
       return res.status(200).send({ message: user.inviteCode, user });
     }
