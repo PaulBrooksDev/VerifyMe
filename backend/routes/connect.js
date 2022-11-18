@@ -1,15 +1,11 @@
 const express = require("express");
 const { auth } = require("../middleware/auth");
 const router = new express.Router();
-const {
-  getUser,
-  connectTwitter,
-  sendTwitterAuthUrl,
-  connectDiscord,
-  connectWallet,
-  connectSubmit,
-  getDiscordInvite,
-} = require("../controllers/connect");
+
+const { getUser } = require("../controllers/getUser");
+const { connectDiscord, submit } = require("../controllers/discordAuth");
+const { twitterUrl, connectTwitter } = require("../controllers/twitterAuth");
+const { connectWallet } = require("../controllers/walletAuth");
 
 // access - Public
 // endpoint -  /api/connect/user
@@ -24,7 +20,7 @@ router.post("/discord", connectDiscord);
 // access - Private
 // endpoint -  /api/connect/twitter/url
 // description - Sends the twitter oAuth redirect to the users browser
-router.post("/twitter/url", auth, sendTwitterAuthUrl);
+router.post("/twitter/url", auth, twitterUrl);
 
 // access - Private
 // endpoint -  /api/connect/twitter
@@ -39,6 +35,6 @@ router.post("/wallet", auth, connectWallet);
 // access - Private
 // endpoint -  /api/connect/submit
 // description - Saves all fields to the database and marks user as has completed signup
-router.post("/submit", auth, connectSubmit);
+router.post("/submit", auth, submit);
 
 module.exports = router;
