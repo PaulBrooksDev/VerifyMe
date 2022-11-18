@@ -2,6 +2,7 @@ import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../context/context";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function TwitterAuth() {
   const navigate = useNavigate();
@@ -28,11 +29,23 @@ export default function TwitterAuth() {
       )
       .then((res) => {
         setUser(res.data.message);
+
         localStorage.setItem("isAuth", true);
+
         navigate("/wallet");
+
+        toast.success(
+          `Twitter User: ${res.data.message.twitterUsername} connected!`,
+          {
+            position: toast.POSITION.BOTTOM_LEFT,
+          }
+        );
       })
       .catch((e) => {
-        return console.log(e);
+        navigate("/twitter");
+        toast.error(e.message, {
+          position: toast.POSITION.BOTTOM_LEFT,
+        });
       });
   }, []);
 

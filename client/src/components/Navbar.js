@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
+import AppContext from "../context/context";
 import styled, { css } from "styled-components";
+import { useContext } from "react";
+import { SocialIcon } from "react-social-icons";
 
 const Container = styled.div`
   display: flex;
@@ -20,6 +23,16 @@ const Nav = styled.div`
 
 const NavLeft = styled.div`
   display: flex;
+  flex: 50%;
+`;
+
+const NavRight = styled.div`
+  display: flex;
+  flex: 50%;
+  justify-content: flex-end;
+  color: white;
+  font-weight: bold;
+  gap: 10px;
 `;
 
 const Brand = styled.div`
@@ -32,6 +45,7 @@ const Brand = styled.div`
 `;
 
 export default function Navbar() {
+  const { user } = useContext(AppContext);
   return (
     <Container>
       <Nav>
@@ -40,6 +54,17 @@ export default function Navbar() {
             <Brand>Verify Me</Brand>
           </Link>
         </NavLeft>
+
+        <NavRight>
+          {user.discordUsername ? (
+            <>
+              <SocialIcon style={{ height: 25, width: 25 }} network="discord" />
+              {user.discordUsername}
+            </>
+          ) : (
+            <></>
+          )}
+        </NavRight>
       </Nav>
     </Container>
   );

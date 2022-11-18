@@ -1,6 +1,10 @@
 import "./App.css";
 import { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import styled, { css } from "styled-components";
 import AppContext from "./context/context";
 import Box from "@mui/material/Box";
@@ -56,6 +60,7 @@ function App() {
   return (
     <Router>
       <Navbar />
+      <ToastContainer />
       <div className="App">
         <FormDiv>
           <StepperWrapper>

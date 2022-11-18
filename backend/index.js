@@ -75,3 +75,10 @@ wss.on("connection", (ws) => {
 server.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);
 });
+
+process.on("uncaughtException", function (e) {
+  console.error(e.message);
+  console.log(
+    "An uncaught exception has occured. Please notify the developer to fix the issue"
+  );
+});

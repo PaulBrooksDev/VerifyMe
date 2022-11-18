@@ -44,7 +44,34 @@ const discordClient = new Client({
   partials: [Partials.Channel],
 });
 
-discordClient.login(process.env.DISCORD_BOT_TOKEN);
+// Activate the discord bot
+discordClient
+  .login(process.env.DISCORD_BOT_TOKEN)
+  .then(() => {
+    console.log("Discord bot active.");
+  })
+  .catch((e) => {
+    console.log(e.message);
+    console.log("DISCORD_BOT_TOKEN is likely invalid.");
+  });
+
+// Give discord user the verified role upon joining the server
+discordClient.on("guildMemberAdd", async (member) => {
+  try {
+    const isUserValid = await User.findOne({ discordId: member.user.id });
+
+    if (!isUserValid) return;
+
+    let role = member.guild.roles.cache.find(
+      (r) => r.id === process.env.DISCORD_VERIFIED_ROLE_ID
+    );
+
+    member.roles.add(role);
+  } catch (e) {
+    console.log(e.message);
+    console.log("DISCORD_VERIFIED_ROLE_ID is likely invalid.");
+  }
+});
 
 // access - Public
 // endpoint -  /api/connect/user
@@ -64,6 +91,7 @@ exports.getUser = async (req, res) => {
       twitterUsername: user.twitterUsername,
       walletAddress: user.walletAddress,
       currentStep: user.currentStep,
+      inviteCode: user.inviteCode,
     };
 
     return res.status(200).send({ message: user });
@@ -247,6 +275,17 @@ exports.connectTwitter = async (req, res) => {
             .send({ error: "Twitter not connected. Please try again." });
         }
 
+        // Check if the provided twitter account has already been registered
+        const userExist = await User.findOne({
+          twitterId: getCurrentUser.data.id,
+        });
+
+        if (userExist) {
+          return res
+            .status(404)
+            .send({ error: "A user with that twitter account already exist." });
+        }
+
         // Save retrieved user info the database update current step
         user.twitterId = getCurrentUser.data.id;
         user.twitterUsername = getCurrentUser.data.username;
@@ -335,7 +374,7 @@ exports.connectSubmit = async (req, res) => {
         .send({ error: "Form not submitted. Please try again." });
     }
 
-    if (!user.walletAddress || user.currentStep !== 3) {
+    if (!user.walletAddress || user.currentStep < 3) {
       return res.status(404).send({
         error:
           "You must first confirm your twitter, discord, and ETH accounts. ",
@@ -407,7 +446,6 @@ exports.connectSubmit = async (req, res) => {
     return res.status(200).send({ message: inviteLink, user });
   } catch (e) {
     console.log(e);
-
     return res.status(400).send({ error: e.message });
   }
 };

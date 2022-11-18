@@ -10,6 +10,8 @@ export default function AppState(props) {
     walletAddress: "",
     currentStep: 0,
     isSignupComplete: false,
+    isReturningUser: false,
+    inviteCode: "",
     isAuth: localStorage.getItem("isAuth"),
   });
 

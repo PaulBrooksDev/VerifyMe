@@ -1,9 +1,9 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import AppContext from "../context/context";
 import { useMetaMask } from "metamask-react";
-
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const Box = styled.div`
@@ -81,25 +81,64 @@ export default function Wallet() {
   }, []);
 
   const handleWallet = async () => {
-    await connect().then(async (res) => {
-      const address = res[0];
+    if (!window.ethereum) {
+      window.location.replace(
+        `https://metamask.app.link/dapp/${process.env.REACT_APP_SERVER_URL}/wallet`
+      );
 
-      await axios
-        .post(
-          `${process.env.REACT_APP_SERVER_URL}/api/connect/wallet`,
-          { address },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          setUser(res.data.message);
-          navigate("/complete");
-        })
-        .catch((e) => {
-          console.log(e);
-          localStorage.setItem("isAuth", false);
-          navigate("/");
+      toast.error(
+        "Ethereum wallet not detected. If on a mobile device please use MetaMask browser.",
+        {
+          position: toast.POSITION.BOTTOM_LEFT,
+        }
+      );
+    }
+
+    await window.ethereum
+      .request({
+        method: "wallet_requestPermissions",
+        params: [
+          {
+            eth_accounts: {},
+          },
+        ],
+      })
+      .then(async (res) => {
+        const address = res[0].caveats[0].value[0];
+
+        await axios
+          .post(
+            `${process.env.REACT_APP_SERVER_URL}/api/connect/wallet`,
+            { address },
+            { withCredentials: true }
+          )
+          .then((res) => {
+            setUser(res.data.message);
+            navigate("/complete");
+            toast.success(
+              `Wallet: ${address.substring(0, 4)}....${address.substring(
+                address.length - 4,
+                address.length
+              )} connected. `,
+              {
+                position: toast.POSITION.BOTTOM_LEFT,
+              }
+            );
+          })
+          .catch((e) => {
+            localStorage.setItem("isAuth", false);
+
+            navigate("/");
+            toast.error(e.message, {
+              position: toast.POSITION.BOTTOM_LEFT,
+            });
+          });
+      })
+      .catch((e) => {
+        toast.error(e.message, {
+          position: toast.POSITION.BOTTOM_LEFT,
         });
-    });
+      });
   };
 
   return (

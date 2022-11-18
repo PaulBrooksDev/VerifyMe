@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import AppContext from "../context/context";
 import axios from "axios";
+import { SocialIcon } from "react-social-icons";
+import { toast } from "react-toastify";
 
 const Box = styled.div`
   display: flex;
@@ -29,6 +31,9 @@ const InfoText = styled.div`
 const Button = styled.button`
   display: flex;
   width: fit-content;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   background-color: #324eed;
   padding: 20px;
   border: none;
@@ -86,7 +91,10 @@ export default function Discord() {
   return (
     <>
       <Box>
-        <Button onClick={() => handleDiscord()}>Connect Discord</Button>
+        <Button onClick={() => handleDiscord()}>
+          <SocialIcon style={{ height: 25, width: 25 }} network="discord" />
+          Connect Discord
+        </Button>
         <InfoText>
           Connecting your Discord account allows us to view your Discord
           username and ID for site verification and server role purposes. We can

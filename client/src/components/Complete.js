@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import AppContext from "../context/context";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Box = styled.div`
@@ -102,6 +102,13 @@ export default function Complete() {
       .then((res) => {
         setUser(res.data.message);
 
+        if (res.data.message.inviteCode) {
+          setInvite(res.data.message.inviteCode);
+          toast.info("You have already completed registration.", {
+            position: toast.POSITION.BOTTOM_LEFT,
+          });
+        }
+
         // Send user to the current step saved in the database if the user has already began signup
         if (res.data.message.currentStep === 1) {
           return navigate("/twitter");
@@ -122,14 +129,12 @@ export default function Complete() {
 
   const handleCaptcha = (value) => {
     if (!value) return;
-
     setCaptcha(value);
     setCaptchaSolved(true);
   };
 
   const handleSubmit = () => {
     if (!captcha) return;
-
     setCaptchaSolved(false);
 
     axios
@@ -141,6 +146,9 @@ export default function Complete() {
       .then((res) => {
         setInvite(res.data.message);
         setUser(res.data.user);
+        toast.success("Registration complete!", {
+          position: toast.POSITION.BOTTOM_LEFT,
+        });
       })
       .catch((e) => {
         console.log(e.message);
@@ -157,7 +165,7 @@ export default function Complete() {
         {invite ? (
           <>
             <InviteText>
-              Congrats you're invited!
+              Congrats, {user.discordUsername} you're invited!
               <InviteLink onClick={handleInviteClick}>{invite}</InviteLink>
             </InviteText>
           </>

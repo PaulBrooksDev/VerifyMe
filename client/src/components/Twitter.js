@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import AppContext from "../context/context";
 import axios from "axios";
+import { SocialIcon } from "react-social-icons";
+import { toast } from "react-toastify";
 
 const Box = styled.div`
   display: flex;
@@ -29,6 +31,9 @@ const InfoText = styled.div`
 const Button = styled.button`
   display: flex;
   width: fit-content;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   background-color: #324eed;
   padding: 20px;
   border: none;
@@ -88,14 +93,19 @@ export default function Twitter() {
         window.location.replace(res.data.message);
       })
       .catch((e) => {
-        console.log(e.message);
+        toast.error(e.message, {
+          position: toast.POSITION.BOTTOM_LEFT,
+        });
       });
   };
 
   return (
     <>
       <Box>
-        <Button onClick={() => handleTwitter()}>Connect Twitter</Button>
+        <Button onClick={() => handleTwitter()}>
+          <SocialIcon style={{ height: 25, width: 25 }} network="twitter" />
+          Connect Twitter
+        </Button>
         <InfoText>
           Connecting your Twitter account allows us to view your Twitter handle
           and ID for verification purposes. We can NOT send tweets on your

@@ -8,6 +8,7 @@ const {
   connectDiscord,
   connectWallet,
   connectSubmit,
+  getDiscordInvite,
 } = require("../controllers/connect");
 
 // access - Public
