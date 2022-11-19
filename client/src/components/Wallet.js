@@ -48,7 +48,7 @@ const Button = styled.button`
 
 export default function Wallet() {
   const navigate = useNavigate();
-  const { connect } = useMetaMask();
+  const { connect, account, status } = useMetaMask();
   const { user, setUser } = useContext(AppContext);
 
   // Check if user has already started signup
@@ -81,6 +81,7 @@ export default function Wallet() {
   }, []);
 
   const handleWallet = async () => {
+    // If the user doesn't have a wallet installed redirect them to download a wallet
     if (!window.ethereum) {
       window.location.replace(
         `https://metamask.app.link/dapp/${process.env.REACT_APP_SERVER_URL}/wallet`
@@ -92,8 +93,49 @@ export default function Wallet() {
           position: toast.POSITION.BOTTOM_LEFT,
         }
       );
+
+      return;
     }
 
+    // Method for getting address on mobile only
+    if (navigator.userAgentData.mobile) {
+      await connect()
+        .then(async (res) => {
+          let address = res[0];
+
+          await axios
+            .post(
+              `${process.env.REACT_APP_SERVER_URL}/api/connect/wallet`,
+              { address },
+              { withCredentials: true }
+            )
+            .then((res) => {
+              setUser(res.data.message);
+              navigate("/complete");
+              toast.success(
+                `Wallet: ${address.substring(0, 4)}....${address.substring(
+                  address.length - 4,
+                  address.length
+                )} connected. `,
+                {
+                  position: toast.POSITION.BOTTOM_LEFT,
+                }
+              );
+            })
+            .catch((e) => {
+              toast.error(e.message, {
+                position: toast.POSITION.BOTTOM_LEFT,
+              });
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+      return;
+    }
+
+    // Method for getting addresses on non-mobile device
     await window.ethereum
       .request({
         method: "wallet_requestPermissions",

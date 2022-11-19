@@ -22,6 +22,7 @@ exports.connectWallet = async (req, res) => {
 
     const { address } = sanitize(req.body);
 
+    console.log(address);
     if (!address) {
       return res
         .status(404)
