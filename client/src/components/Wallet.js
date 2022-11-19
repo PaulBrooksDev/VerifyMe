@@ -104,7 +104,7 @@ export default function Wallet() {
         ],
       })
       .then(async (res) => {
-        const address = res[0].caveats[0].value[0];
+        let address = res[0].caveats[0].value[0] || res[0].caveats[1].value[0];
 
         await axios
           .post(
@@ -126,9 +126,6 @@ export default function Wallet() {
             );
           })
           .catch((e) => {
-            localStorage.setItem("isAuth", false);
-
-            navigate("/");
             toast.error(e.message, {
               position: toast.POSITION.BOTTOM_LEFT,
             });
