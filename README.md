@@ -6,6 +6,10 @@ VerifyMe is a Web3 MERN stack application for preemptive user verification. It a
 
 NodeJS
 
+Twitter developer portal credentials - https://developer.twitter.com
+
+Discord developer portal Oauth credentials - https://discord.com/developers/
+
 MongoDB:
 
 Cloud hosted - https://www.mongodb.com/home
@@ -32,30 +36,16 @@ npm run dev
 ```
 ## 
 
-Heroku production server
+Vercel production server
 
-navigate to the folders root directory
+0 - Create a vercel account
 
-0 - Build the react app
+1 - Fork this repo  
 
-1 - Login to heroku
+2 - Connect github to vercel
 
-2 - Add your Heroku dyno to the local git. 
+3 - import this repo on vercel
 
-3 - Add & commit changes (if any)
+4 - Edit environment variables
 
-4 - push to heroku (change master to main if there is a git branch error)
-
-```bash
-npm run prod-build
-
-heroku login
-
-heroku git:remote -a your-app-name.
-
-git add .
-
-git commit -m "Commit message"
-
-git push heroku master
-```
+5 - Deploy
