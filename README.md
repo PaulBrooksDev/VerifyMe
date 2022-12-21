@@ -34,14 +34,14 @@ Get Discord redirect uri from discord developer portal under oauth2
 
 Get Twitter redirect uri by replacing client_id= and redirect_url= with your twitter client id and redirect url.
 
-You MUST rebuild the react app anytime you change the env file in the client folder and commit the changes to github.
+You MUST rebuild the react app anytime you change the env file in the client folder. You must then commit the changes to github.
 
 ```bash
-    cd client
+cd client
 ```
 
 ```bash
-    npm run build
+npm run build
 ```
 
 
