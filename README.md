@@ -12,9 +12,8 @@ Cloud hosted - https://www.mongodb.com/home
 
 Local download - https://www.mongodb.com/try/download/community (connects to cloud hosted uri for ability to download data as csv)
 
-Update the example.env file with your configs and rename to .env 
+Update the example.env file in the backend folder with your corresponding values and rename to .env 
 
-Update the example.env file and rename to .env 
 
 ## Installation
 
