@@ -7,9 +7,10 @@ VerifyMe is a Web3 MERN stack application for preemptive user verification. It a
 NodeJS
 
 MongoDB:
-    Cloud hosted - https://www.mongodb.com/home
 
-    Local download - https://www.mongodb.com/try/download/community (connects to cloud hosted uri for ability download data as csv)
+Cloud hosted - https://www.mongodb.com/home
+
+Local download - https://www.mongodb.com/try/download/community (connects to cloud hosted uri for ability download data as csv)
 
 Update the example.env file with your configs and rename to .env 
 
