@@ -176,6 +176,7 @@ exports.submit = async (req, res) => {
       return res.status(400).send({ error: "Invalid captcha response." });
     }
 
+    // If the user already has an invite code, return it
     if (user.inviteCode) {
       user = {
         discordId: user.discordId,
@@ -191,6 +192,7 @@ exports.submit = async (req, res) => {
       return res.status(200).send({ message: user.inviteCode, user });
     }
 
+    // Create unique invite code for user
     const guild = await discordClient.guilds.fetch(
       process.env.DISCORD_SERVER_ID
     );

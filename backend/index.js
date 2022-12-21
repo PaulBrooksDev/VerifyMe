@@ -21,7 +21,7 @@ app.use(
   })
 );
 
-// CORS Config
+// Sets up CORS for the server to allow requests from the client
 if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
@@ -44,7 +44,7 @@ if (process.env.NODE_ENV === "production") {
   );
 }
 
-// Deployment Config
+// Points the server to the build folder of the React app
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/build")));
 
@@ -52,15 +52,15 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
   });
 }
-
+// Sets the port for the server
 const PORT = process.env.PORT || 5000;
 
-// Routes
+// endpoint routes for the server to use when a request is made to the server from the client
 const connect = require("./routes/connect");
 
 app.use("/api/connect", connect);
 
-// Websocket
+// Websocket for the server to use if websocket requests are made from the client
 wss.on("connection", (ws) => {
   ws.on("message", (msg) => {
     msg = JSON.parse(msg);
@@ -76,6 +76,7 @@ server.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);
 });
 
+// Error handling for when an uncaught exception occurs. Prevents the server from crashing
 process.on("uncaughtException", function (e) {
   console.error(e.message);
   console.log(

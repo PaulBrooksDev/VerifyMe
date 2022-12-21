@@ -2,6 +2,8 @@
   "name": "verifyme",
   "version": "1.0.0",
   "scripts": {
-    "start": "cd backend && npm install && node index.js"
+    "start": "cd backend && npm install && node index.js",
+    "dev": "cd client && npm install && npm run start",
+    "prod-build": "cd client && npm install && npm run build"
   }
 }
