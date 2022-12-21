@@ -44,7 +44,7 @@ navigate to the folders root directory
 
 3 - Add & commit changes (if any)
 
-4 - push to heroku (change master to main if there is an error)
+4 - push to heroku (change master to main if there is a git branch error)
 
 ```bash
 npm run prod-build
